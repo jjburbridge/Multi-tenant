@@ -22,6 +22,7 @@ This will list all available workspaces for you. If your user only has access to
 There are 2 custom roles that I have created to show how workspaces can be filtered on by user roles:
  - `author`
  - `post`
+
 This is applied in `generateConfig` in `sanity.config.ts`
 
 Other workspaces are dynamically generated based on category Documents. 
