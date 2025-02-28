@@ -3,12 +3,10 @@
  * This config is used to set up Sanity Studio that's mounted on the `/pages/studio/[[...index]].tsx` route
  */
 
-import { crossDatasetDuplicator } from '@sanity/cross-dataset-duplicator'
 import { documentInternationalization } from '@sanity/document-internationalization'
 import { visionTool } from '@sanity/vision'
 import {
   apiVersion,
-  copyDataset,
   dataset,
   DRAFT_MODE_ROUTE,
   ecomDataset,
@@ -29,7 +27,7 @@ import pageType from 'schemas/page'
 import postType from 'schemas/post'
 import productType from 'schemas/product'
 import settingsType from 'schemas/settings'
-import { structurePost, structureCategory, templatesCategory } from 'structure'
+import { structureCategory, structurePost, templatesCategory } from 'structure'
 
 const title =
   process.env.NEXT_PUBLIC_SANITY_PROJECT_TITLE || 'Next.js Blog with Sanity.io'
@@ -171,17 +169,7 @@ export const allWorkspace = defineConfig({
     types: [authorType, postType, categoryType, settingsType, pageType],
   },
 })
-export const allCopyWorkspace = defineConfig({
-  name: 'allCopy',
-  basePath: '/studio/all-copy',
-  title: 'All Copy',
-  projectId: projectId,
-  dataset: copyDataset,
-  plugins: [...plugins, crossDatasetDuplicator({ types: ['post', 'author'] })],
-  schema: {
-    types: [authorType, postType, categoryType, settingsType, pageType],
-  },
-})
+
 export const homeWorkspace = defineConfig({
   name: 'home',
   basePath: '/studio/home',
@@ -225,7 +213,6 @@ const generateConfig = async () => {
       authorWorkspace,
       postWorkspace,
       productWorkspace,
-      allCopyWorkspace,
       ...categoryWorkspaces,
     ]
   }

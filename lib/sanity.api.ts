@@ -13,10 +13,6 @@ export const ecomDataset = assertValue(
   process.env.NEXT_PUBLIC_SANITY_DATASET_ECOM,
   'Missing environment variable: NEXT_PUBLIC_SANITY_DATASET_ECOM',
 )
-export const copyDataset = assertValue(
-  process.env.NEXT_PUBLIC_SANITY_DATASET_COPY,
-  'Missing environment variable: NEXT_PUBLIC_SANITY_DATASET_COPY',
-)
 
 export const projectId = assertValue(
   process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
