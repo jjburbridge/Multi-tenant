@@ -200,9 +200,11 @@ const generateConfig = async () => {
 
   let studioConfigs = [homeWorkspace]
 
+  // custom role
   if (userRoles.includes('author')) {
     studioConfigs.push(authorWorkspace)
   }
+  // custom role
   if (userRoles.includes('post')) {
     studioConfigs.push(postWorkspace, productWorkspace)
   }
@@ -210,6 +212,7 @@ const generateConfig = async () => {
   if (studioConfigs.length === 2) {
     studioConfigs.shift()
   }
+  // default role
   if (userRoles.includes('administrator')) {
     const categories = await fetchCategories()
 
