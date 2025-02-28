@@ -16,6 +16,8 @@
   },
   "dependencies": {
     "@sanity/client": "6.28.0",
+    "@sanity/cross-dataset-duplicator": "^1.4.1",
+    "@sanity/document-internationalization": "^3.3.1",
     "@sanity/icons": "3.6.0",
     "@sanity/image-url": "1.1.0",
     "@sanity/vision": "3.76.1",
@@ -31,9 +33,10 @@
     "next-sanity-image": "6.1.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "sanity": "3.76.1",
+    "sanity": "3.77.1",
     "sanity-plugin-asset-source-unsplash": "3.0.3",
     "sanity-plugin-iframe-pane": "3.2.1",
+    "sanity-plugin-workspace-home": "^1.1.1",
     "styled-components": "6.1.15",
     "swr": "2.3.2"
   },

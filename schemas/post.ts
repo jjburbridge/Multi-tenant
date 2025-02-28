@@ -73,6 +73,13 @@ export default defineType({
       type: 'text',
     }),
     defineField({
+      name: 'category',
+      title: 'Category',
+      type: 'reference',
+      to: [{ type: 'category' }],
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
       name: 'coverImage',
       title: 'Cover Image',
       type: 'image',
@@ -91,6 +98,29 @@ export default defineType({
       title: 'Author',
       type: 'reference',
       to: [{ type: authorType.name }],
+    }),
+    defineField({
+      name: 'products',
+      title: 'Products',
+      type: 'array',
+      of: [
+        {
+          type: 'crossDatasetReference',
+          dataset: 'ecom',
+          studioUrl: ({ type, id }) =>
+            `${window.location.origin}/studio/product/desk/intent/edit/id=${id};type=${type}/`,
+          to: [
+            {
+              type: 'product',
+              preview: {
+                select: {
+                  title: 'name',
+                },
+              },
+            },
+          ],
+        },
+      ],
     }),
   ],
   preview: {
