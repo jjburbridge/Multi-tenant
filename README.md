@@ -13,9 +13,9 @@ npm install && npm run dev
 
 When you run this development server, the changes you make in your frontend and studio configuration will be applied live using hot reloading.
 
-Your site should be up and running on (http://localhost:3000)[localhost-3000]!  - I have not made any changes for this based on the changes in the studio
+Your site should be up and running on [localhost-3000](http://localhost:3000)  - I have not made any changes for this based on the changes in the studio
 
-You can access your Sanity Studios (http://localhost:3000/studio)[localhost-3000-studio].
+You can access your Sanity Studios [localhost-3000-studio](http://localhost:3000/studio).
 This will list all available workspaces for you. If your user only has access to just one Workspace that studio will be displayed.
 
 
