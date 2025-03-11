@@ -27,6 +27,7 @@ import pageType from 'schemas/page'
 import postType from 'schemas/post'
 import productType from 'schemas/product'
 import settingsType from 'schemas/settings'
+import teams from 'schemas/teams'
 import { structureCategory, structurePost, templatesCategory } from 'structure'
 
 const title =
@@ -56,6 +57,17 @@ const plugins = [
     visionTool({ defaultApiVersion: apiVersion }),
 ]
 
+const categories = [
+  {
+    id: 'category-1',
+    name: 'Category 1',
+  },
+  {
+    id: 'category-2',
+    name: 'Category 2',
+  },
+]
+
 export const client = createClient({
   projectId,
   dataset,
@@ -75,12 +87,6 @@ export const fetchCurrentUserRoles = async (): Promise<string[]> => {
     console.error(error)
     return []
   }
-}
-
-const fetchCategories = async () => {
-  const query = `*[_type == "category"]{_id, categoryName}`
-  const response = await client.fetch(query)
-  return response
 }
 
 export const productWorkspace = defineConfig({
@@ -166,58 +172,41 @@ export const allWorkspace = defineConfig({
     enabled: true,
   },
   schema: {
-    types: [authorType, postType, categoryType, settingsType, pageType],
-  },
-})
-
-export const homeWorkspace = defineConfig({
-  name: 'home',
-  basePath: '/studio/home',
-  title: 'home',
-  projectId: projectId,
-  dataset: dataset,
-  plugins: [workspaceHome()],
-  schema: {
-    types: [],
+    types: [authorType, postType, categoryType, settingsType, pageType, teams],
   },
 })
 
 const generateConfig = async () => {
   const userRoles = await fetchCurrentUserRoles()
-  // console.log(userRoles);
-
-  let studioConfigs = [homeWorkspace]
 
   // custom role
   if (userRoles.includes('author')) {
-    studioConfigs.push(authorWorkspace)
+    return authorWorkspace
   }
   // custom role
   if (userRoles.includes('post')) {
-    studioConfigs.push(postWorkspace, productWorkspace)
+    return postWorkspace
   }
 
-  if (studioConfigs.length === 2) {
-    studioConfigs.shift()
+
+  const filteredCategories = categories
+    .map((category) => {
+      if (userRoles?.includes(`${category.id}-manager`)) {
+        return categoryPostWorkspace(category.id, category.name)
+      }
+    })
+    .filter(Boolean)
+
+  if (filteredCategories.length) {
+    return filteredCategories[0]
   }
+
   // default role
   if (userRoles.includes('administrator')) {
-    const categories = await fetchCategories()
-
-    const categoryWorkspaces = categories.map((category) =>
-      categoryPostWorkspace(category._id, category.categoryName),
-    )
-    studioConfigs = [
-      homeWorkspace,
-      allWorkspace,
-      authorWorkspace,
-      postWorkspace,
-      productWorkspace,
-      ...categoryWorkspaces,
-    ]
+    return allWorkspace
   }
 
-  return studioConfigs
+  return []
 }
 
 export const configs = await generateConfig()
