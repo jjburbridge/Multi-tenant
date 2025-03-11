@@ -3,13 +3,11 @@
  * This config is used to set up Sanity Studio that's mounted on the `/pages/studio/[[...index]].tsx` route
  */
 
-import { documentInternationalization } from '@sanity/document-internationalization'
 import { visionTool } from '@sanity/vision'
 import {
   apiVersion,
   dataset,
   DRAFT_MODE_ROUTE,
-  ecomDataset,
   projectId,
 } from 'lib/sanity.api'
 import { createClient } from 'next-sanity'
@@ -20,14 +18,11 @@ import { CurrentUser, defineConfig } from 'sanity'
 import { presentationTool } from 'sanity/presentation'
 import { structureTool } from 'sanity/structure'
 import { unsplashImageAsset } from 'sanity-plugin-asset-source-unsplash'
-import { workspaceHome } from 'sanity-plugin-workspace-home'
 import authorType from 'schemas/author'
 import categoryType from 'schemas/category'
 import pageType from 'schemas/page'
 import postType from 'schemas/post'
-import productType from 'schemas/product'
 import settingsType from 'schemas/settings'
-import teams from 'schemas/teams'
 import { structureCategory, structurePost, templatesCategory } from 'structure'
 
 const title =
@@ -89,57 +84,6 @@ export const fetchCurrentUserRoles = async (): Promise<string[]> => {
   }
 }
 
-export const productWorkspace = defineConfig({
-  name: 'product',
-  basePath: '/studio/product',
-  title: 'product',
-  projectId: projectId,
-  dataset: ecomDataset,
-  plugins: [
-    structureTool(),
-    documentInternationalization({
-      // Required configuration
-      supportedLanguages: [
-        { id: 'se', title: 'Swedish' },
-        { id: 'en', title: 'English' },
-      ],
-      schemaTypes: ['product'],
-    }),
-  ],
-  schema: {
-    types: [productType],
-  },
-})
-
-export const authorWorkspace = defineConfig({
-  name: 'author',
-  basePath: '/studio/author',
-  title: 'author',
-  projectId: projectId,
-  dataset: dataset,
-  plugins,
-  schema: {
-    types: [authorType],
-  },
-})
-
-export const postWorkspace = defineConfig({
-  name: 'post',
-  basePath: '/studio/post',
-  title: 'post',
-  projectId: projectId,
-  dataset: dataset,
-  plugins: [
-    structureTool({
-      structure: structurePost,
-    }),
-  ],
-  schema: {
-    types: [postType, authorType, categoryType],
-    templates: templatesCategory,
-  },
-})
-
 export const categoryPostWorkspace = (categoryId, name) => {
   const workspaceName = name.toLowerCase().replace(/[^a-z0-9]/gi, '')
   console.log(workspaceName)
@@ -148,7 +92,7 @@ export const categoryPostWorkspace = (categoryId, name) => {
     basePath: `/studio/${workspaceName}-post`,
     title: `${name} Post`,
     projectId: projectId,
-    dataset: dataset,
+    dataset: categoryId,
     plugins: [
       structureTool({
         structure: (s) => structureCategory(s, { categoryId, name }),
@@ -172,22 +116,12 @@ export const allWorkspace = defineConfig({
     enabled: true,
   },
   schema: {
-    types: [authorType, postType, categoryType, settingsType, pageType, teams],
+    types: [authorType, postType, categoryType, settingsType, pageType],
   },
 })
 
 const generateConfig = async () => {
   const userRoles = await fetchCurrentUserRoles()
-
-  // custom role
-  if (userRoles.includes('author')) {
-    return authorWorkspace
-  }
-  // custom role
-  if (userRoles.includes('post')) {
-    return postWorkspace
-  }
-
 
   const filteredCategories = categories
     .map((category) => {
