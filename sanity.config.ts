@@ -77,7 +77,7 @@ export const fetchCurrentUserRoles = async (): Promise<string[]> => {
       withCredentials: true,
     })
 
-    return response.roles.map((role) => role.name)
+    return response.roles?.map((role) => role.name)
   } catch (error) {
     console.error(error)
     return []
@@ -120,6 +120,17 @@ export const allWorkspace = defineConfig({
   },
 })
 
+export const fallbackWorksapce = defineConfig({
+  name: 'fallback',
+  basePath: '/studio/fallback',
+  title: 'Fallback',
+  projectId: projectId,
+  dataset: dataset,
+  schema: {
+    types: [],
+  },
+})
+
 const generateConfig = async () => {
   const userRoles = await fetchCurrentUserRoles()
 
@@ -136,11 +147,11 @@ const generateConfig = async () => {
   }
 
   // default role
-  if (userRoles.includes('administrator')) {
+  if (userRoles?.includes('administrator')) {
     return allWorkspace
   }
 
-  return []
+  return [fallbackWorksapce]
 }
 
 export const configs = await generateConfig()
